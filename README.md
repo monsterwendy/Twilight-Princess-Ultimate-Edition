@@ -86,7 +86,9 @@ pip --version</pre>
 <pre>sudo apt install python3 python3-pip ninja-build</pre>
 <p>(or your distro equivalent)</p>
 <p>Install gclib:</p>
-<pre>pip3 install "gclib[speedups] @ git+https://github.com/LagoLunatic/gclib.git"</pre>
+<pre>pip3 install "gclib @ git+https://github.com/LagoLunatic/gclib.git"</pre>
+<p><b>Note:</b> Do <b>not</b> use <code>gclib[speedups]</code> — the C extension fails to compile on modern gcc. On Ubuntu 24.04+ / Debian Bookworm+ you may need <code>--break-system-packages</code>:</p>
+<pre>pip3 install --break-system-packages "gclib @ git+https://github.com/LagoLunatic/gclib.git"</pre>
 
 <hr>
 
@@ -94,12 +96,6 @@ pip --version</pre>
 <p>Clone the repo:</p>
 <pre>git clone https://github.com/TP-Ultimate-Edition/Twilight-Princess-Ultimate-Edition.git
 cd Twilight-Princess-Ultimate-Edition</pre>
-
-<p>Run build_iso.bat</p>
-<pre>select your iso and let it run until it crashes</pre>
-
-<p>Open CMD</p>
-<pre>cd /path to repo/</pre>
 
 <p>Configure the project:</p>
 <pre>python3 configure.py --non-matching --map</pre>
@@ -134,14 +130,22 @@ cd Twilight-Princess-Ultimate-Edition</pre>
 
 <h2><b>Linux ISO Build</b></h2>
 <p>Run the included script:</p>
-<pre>python3 build_iso_linux.py</pre>
+<pre>python3 build_iso.py</pre>
 
 <p>It will:</p>
 <ul>
-  <li>Ask for your output ISO name</li>
-  <li>Compile a patched 60FPS ISO</li>
-  <li>Output a Dolphin-ready image</li>
+  <li>Ask for your vanilla GCN USA ISO path</li>
+  <li>Copy it into place (or skip if already present)</li>
+  <li>Run the ninja build</li>
+  <li>Ask for your desired output ISO path</li>
+  <li>Produce the patched 60FPS Ultimate Edition ISO</li>
 </ul>
+
+<p>Alternatively, call the rebuild tool directly (after a successful <code>ninja</code> build):</p>
+<pre>python3 tools/rebuild-decomp-tp.py orig/GZ2E01/baserom.iso /path/to/output.iso $(pwd)</pre>
+
+<p><b>Verified on:</b> Ubuntu 25.04 x86_64. Output: valid GCN ISO (GZ2E01, magic 0xC2339F3D), 1006M.</p>
+<p><b>x86_64 only</b> — CodeWarrior runs via <code>wibo</code> (x86 PE loader). Does not work on ARM64 (Raspberry Pi, Apple Silicon) without additional emulation.</p>
 
 <hr>
 
